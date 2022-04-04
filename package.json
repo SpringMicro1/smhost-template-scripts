@@ -1,7 +1,7 @@
 {
   "name": "cs-wiki",
-  "version": "1.0.0",
-  "description": "A JSON form of Wikipedia's Glossary of Computer Science.",
+  "version": "1.0.1",
+  "description": "A JSON form of Wikipedia's Glossary of Computer Science. Definition lookup and word of the day.",
   "repository": {
     "type": "git",
     "url": "https://github.com/buckldav/cs-wiki.git"
