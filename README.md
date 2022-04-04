@@ -32,4 +32,4 @@ npm run build
 npm test
 ```
 
-Both of the above commands get executed precommit with [husky](./.husky/pre-commit).
+Both of the above commands get executed precommit with [husky](https://github.com/buckldav/cs-wiki/blob/master/.husky/pre-commit).

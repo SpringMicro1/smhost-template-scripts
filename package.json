@@ -1,13 +1,28 @@
 {
   "name": "cs-wiki",
   "version": "1.0.0",
-  "description": "A JSON form of Wikipedia's Glossary of Computer Science",
+  "description": "A JSON form of Wikipedia's Glossary of Computer Science.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/buckldav/cs-wiki.git"
+  },
   "main": "index.ts",
   "scripts": {
     "build": "node main.js",
     "test": "ts-mocha index.test.ts",
     "prepare": "husky install"
   },
+  "keywords": [
+    "computer science",
+    "cs",
+    "json",
+    "glossary",
+    "vocabulary",
+    "wiki",
+    "word a day",
+    "word",
+    "word of the day"
+  ],
   "author": "David Buckley",
   "license": "MIT",
   "devDependencies": {
