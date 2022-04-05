@@ -71,6 +71,6 @@ const preparePageForTests = async (page) => {
   );
 
   // write to file
-  fs.writeFileSync("cs-wiki.json", json);
+  fs.writeFileSync("./src/cs-wiki.json", json);
   await browser.close();
 })();

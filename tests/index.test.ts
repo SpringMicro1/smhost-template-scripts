@@ -2,9 +2,9 @@ const {
   replaceUnicodeSpaces,
   replaceWikiCitations,
   replaceWikiMath,
-} = require("./lib/replacers");
-const { getRandomIndexTodaySeed } = require("./lib/random");
-const { csWiki, getCSWordOfDay, getWikiEntryByTerm } = require("./index");
+} = require("../src/lib/replacers");
+const { getRandomIndexTodaySeed } = require("../src/lib/random");
+const { csWiki, getCSWordOfDay, getWikiEntryByTerm } = require("../src/index");
 
 const fs = require("fs");
 const assert = require("assert");

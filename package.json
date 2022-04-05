@@ -1,6 +1,6 @@
 {
   "name": "cs-wiki",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A JSON form of Wikipedia's Glossary of Computer Science. Definition lookup and word of the day.",
   "repository": {
     "type": "git",
@@ -8,8 +8,8 @@
   },
   "main": "index.ts",
   "scripts": {
-    "build": "node main.js",
-    "test": "ts-mocha index.test.ts",
+    "build": "node ./src/main.js && tsc --build && cp -rf dist/* . && rm -rf dist",
+    "test": "ts-mocha ./tests/index.test.ts",
     "prepare": "husky install"
   },
   "keywords": [

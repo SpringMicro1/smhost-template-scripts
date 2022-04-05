@@ -1,5 +1,6 @@
 "use strict";
-const fs = require("fs");
+//const fs = require("fs");
+import json from "./cs-wiki.json";
 const { getRandomIndexTodaySeed } = require("./lib/random");
 
 export type WikiEntry = {
@@ -7,9 +8,9 @@ export type WikiEntry = {
   definitions: string[];
 };
 
-export const csWiki = JSON.parse(
-  fs.readFileSync("cs-wiki.json")
-) as Array<WikiEntry>;
+export const csWiki = json as Array<WikiEntry>; //JSON.parse(
+//fs.readFileSync("cs-wiki.json")
+//) as Array<WikiEntry>;
 export const getCSWordOfDay = (): WikiEntry =>
   csWiki[getRandomIndexTodaySeed(csWiki.length)];
 export const getWikiEntryByTerm = (term: string): WikiEntry | undefined =>
