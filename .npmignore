@@ -1,7 +1,2 @@
-.husky/
-src/
-tests/
-tsconfig.json
-package.json
+.github/
 *-lock.json
-*.md
