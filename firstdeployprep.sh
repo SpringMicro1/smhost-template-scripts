@@ -1,3 +1,5 @@
 # to be called on first deploy
-npm run disable blog
-npm run disable contact
+for arg; do
+    echo "disabling $arg"
+    npm run disable $arg
+done

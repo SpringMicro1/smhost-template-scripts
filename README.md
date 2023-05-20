@@ -7,8 +7,8 @@
 npm run enable <page>
 # Disable a page in a SpringMicro astro project.
 npm run disable <page>
-# Prep: on first deploy, disable pages behind a paywall (default "blog" and "contact").
-npm run prep
+# Prep: on first deploy, disable pages behind a paywall (args is an array of pages to disable, example: "npm run prep blog contact" disables blog and contact pages).
+npm run prep <args>
 # Build in production: take a screenshot for opengraph and put it in the project's public directory. Uses pm2.
 npm run build
 # Build locally: take a screenshot for opengraph and put it in the project's dist directory. Uses pm2.
