@@ -37,3 +37,15 @@ In your `package.json`, you can use scripts like so:
 # from your project directory
 npm run enable blog
 ```
+
+## Template Code Validation
+
+- Name repos smhost-template-\*
+- `src/config.ts` - see format defined below
+- Blog (markdown) - disabled until blog feature is built
+- Tailwind Config
+- Astro SEO in src/layouts/Layout.astro
+- Accessibility: tab navigation tab-index, https://www.w3.org/WAI/standards-guidelines/aria/
+- RWD
+- robots.txt
+- npm run enable and npm run disable and disabled.json for turing pages on/off.
