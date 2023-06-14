@@ -1,5 +1,11 @@
+// This script checks which standards the project meets
+// It must be run from a node_modules directory, within the project that is being tested
+// The url parameter is only used to check the name of the repository - this script does not visit the url
+
 import fs from "fs";
 import gitconfig from "gitconfiglocal";
+import { chromium } from  "playwright";
+import { exec } from "child_process";
 
 const NUMBER_OF_ARGS = 3;
 
@@ -12,7 +18,6 @@ const gitrepo = process.argv[NUMBER_OF_ARGS - 1];
 
 const BASE_PATH = "../../";
 
-// This script checks which standards the project meets
 // The standards are those defined at https://employees.springmicrohost.com/docs/springmicrohost/templates
 // Name repos smhost-template-*
 // src/config.ts - see format defined below
@@ -33,6 +38,7 @@ let standards = {
   RWD: "➖ Unchecked",
   robotsTxt: "➖ Unchecked",
   enableDisablePages: "➖ Unchecked",
+  contactForm: "➖ Unchecked",
 };
 await checkRepositoryName();
 await checkConfigFile();
@@ -43,6 +49,7 @@ await checkAstroSEO();
 // await checkRWD()
 await checkRobotsTxt();
 await checkEnableDisablePages();
+await checkContactForm();
 logResults();
 
 async function checkRepositoryName() {
@@ -231,10 +238,137 @@ async function checkEnableDisablePages() {
   }
 }
 
+async function checkContactForm () {
+  // Run the test
+  await runPlaywrightTest()
+    .then(result => {
+      standards.contactForm = result;
+    })
+    .catch(err => {
+      console.error(err);
+      standards.contactForm = "❌ Unmet (error when launching application)";
+    });
+}
+
+async function runPlaywrightTest() {
+  // Start Astro project (assuming the command is "npm start" or "npm run dev")
+  const astroProcess = exec('npm start', { cwd: BASE_PATH });
+
+  // Wait for the Astro project to start (adjust the delay if needed)
+  console.log("waiting for page load...")
+  await new Promise(resolve => setTimeout(resolve, 5000));
+
+  // Launch Playwright browser
+  // console.log(`await chromium.launch();`)
+  const browser = await chromium.launch();
+  // console.log(`await browser.newContext();`)
+  const context = await browser.newContext();
+
+  // Set the environment variables for the page
+  // console.log(`await context.newPage();`)
+  const page = await context.newPage();
+  // Expose a custom function to the browser context
+  // console.log(`await context.exposeFunction('setEnvVariables', async (envVariables) => {`)
+  await context.exposeFunction('setEnvVariables', async (envVariables) => {
+    Object.entries(envVariables).forEach(([key, value]) => {
+      process.env[key] = value;
+    });
+  });
+  
+  try {
+    // Navigate to the contact page
+    // console.log(`await page.goto('http://localhost:3000/contact', { timeout: 5000 });`)
+    console.log("navigating to contact page...")
+    await page.goto('http://localhost:3000/contact', { timeout: 5000 });
+  
+  } catch (e) {
+    return "❌ Unmet (error when navigating to contact page)";
+  }
+  // const innerHTML = await page.evaluate(() => {
+  //   return document.body.innerHTML;
+  // });
+  // // Print the innerHTML
+  // console.log(innerHTML);
+
+  // Validate the contact form
+  try {
+    // console.log(`await page.waitForSelector('form[name="contact"]', { timeout: 5000 });`)
+    await page.waitForSelector('form[name="contact"]', { timeout: 5000 });
+  } catch (e) {
+    result = "❌ Unmet (contact form not found. It needs name=\"contact\")";
+  }
+  let result
+  // Fill in form fields
+  try {
+    // console.log(`await page.fill('form[name="contact"] input[name="name"]', 'John Doe', { timeout: 5000 });`)
+    await page.fill('form[name="contact"] input[name="name"]', 'John Doe', { timeout: 5000 });
+    // console.log(`await page.fill('form[name="contact"] input[name="email"]', 'john@example.com', { timeout: 5000 });`)
+    await page.fill('form[name="contact"] input[name="email"]', 'john@example.com', { timeout: 5000 });
+    // console.log(`await page.fill('form[name="contact"] input[name="message"]', 'Hello, Astro!', { timeout: 5000 });`)
+    await page.fill('form[name="contact"] input[name="message"]', 'Hello, Astro!', { timeout: 5000 });
+  } catch (e) {
+    return "❌ Unmet (one of the form inputs (name, email, message) is missing)";
+  }
+
+  try {
+    // // listen for the dialog which will appear after submitting the form
+    // page.Dialog += (_, dialog) => {
+    //   console.log("Dialog message:", dialog.Message)
+    //   // dialog.AcceptAsync();
+    // }
+
+    // // Submit the form
+    // await new Promise(resolve => setTimeout(resolve, 5000));
+    // console.log(`await page.click('form[name="contact"] button', { timeout: 5000 });`)
+    // await page.click('button.rounded.text-center.transition.ring-offset-2.ring-gray-200.w-full.px-6.py-3.bg-black.text-white.border-2.border-transparent')
+    // await new Promise(resolve => setTimeout(resolve, 5000));
+    // await page.click('span.font-bold.text-slate-800');
+    // await page.getByText('SpringMicroHost').click({ force: true });
+    // await new Promise(resolve => setTimeout(resolve, 5000));
+    // const title = await page.title()
+    // console.log(title)
+    
+    // await page.getByText('Send Message').dispatchEvent('click');
+    // await new Promise(resolve => setTimeout(resolve, 5000));
+    // await page.getByText('New Box').click();
+
+
+    // // Create a promise to capture the dialog message
+    // let dialogMessagePromise = new Promise((resolve) => {
+    //   page.once('dialog', async (dialog) => {
+    //     console.log(`await dialog.accept();`)
+    //     await dialog.accept();
+    //     resolve(dialog.message());
+    //   });
+    // });
+
+    // // Wait for the dialog message and print it
+    // console.log(`await dialogMessagePromise;`)
+    // const dialogMessage = await dialogMessagePromise;
+    // console.log(dialogMessage);
+  } catch (e) {
+    return "❌ Unmet (error on submitting the form)";
+  }
+
+  result = "✅ Met";
+
+  // Take a screenshot (optional)
+  // await page.screenshot({ path: 'screenshot.png' });
+
+  // Close the browser
+  // console.log(`await browser.close();`)
+  await browser.close();
+
+  // Stop the Astro project
+  astroProcess.kill();
+
+  return result;
+}
+
 function logResults() {
   console.log(`Local SpringMicro Host Template Standards Test Results:
 ${Object.keys(standards).map(
-  (key) => camelCaseToTitleCase(key) + " - " + standards[key]
+  (key) => camelCaseToTitleCase(key) + ": " + standards[key]
 ).join(`
 `)}`);
 }
